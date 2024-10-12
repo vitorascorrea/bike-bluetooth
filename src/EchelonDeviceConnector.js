@@ -59,6 +59,14 @@ class EchelonDeviceConnector {
     );
   }
 
+  disconnect = async () => {
+    if (!this.device || !this.device.gatt.connected) {
+      return;
+    }
+
+    await this.device.gatt.disconnect();
+  }
+
   #handleCharacteristicValueChanged = (event) => {
     let data = event.target.value;
 

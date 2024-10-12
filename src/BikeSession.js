@@ -54,14 +54,6 @@ class BikeSession {
       this.currentPowerInWatts = 0;
     }
 
-    console.log(
-      `Speed: ${this.currentSpeedInKmPerH.toFixed(
-        2
-      )} km/h, Total km: ${this.totalDistanceInKm.toFixed(
-        2
-      )}, Power watts: ${this.currentPowerInWatts.toFixed(2)}`
-    );
-
     this.lastTimeChecked = currentTime;
   }
 }
