@@ -23,7 +23,7 @@
       border-radius: 8px;
       padding: 20px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 33.33vw;
+      width: auto;
     }
 
     h1 {
@@ -31,15 +31,40 @@
       color: #333;
     }
 
+    /* Grid layout for stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
     .stat {
-      font-size: 2em;
-      margin: 10px 0;
+      font-size: 1.5em;
       color: #444;
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .stat span {
       font-weight: bold;
       color: #007BFF;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      outline: none;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    select:focus {
+      border-color: #007BFF;
     }
 
     button {
@@ -51,6 +76,7 @@
       cursor: pointer;
       font-size: 1em;
       margin-top: 20px;
+      width: 100%;
     }
 
     button:disabled {
@@ -63,15 +89,32 @@
 <body>
   <div class="container">
     <h1>Biking Statistics</h1>
-    <div class="stat">
-      Current Speed: <span id="currentSpeed">0.00 km/h</span>
+
+    <!-- Dropdown to choose between connectors -->
+    <select id="connectorSelect">
+      <option value="echelon">Echelon Bike Connector</option>
+      <option value="debug">Debug Connector</option>
+    </select>
+
+    <!-- Grid for displaying stats -->
+    <div class="stats-grid">
+      <div class="stat">
+        Current Speed: <span id="currentSpeed">0.00 km/h</span>
+      </div>
+      <div class="stat">
+        Average Power: <span id="averagePower">0.00 w</span>
+      </div>
+      <div class="stat">
+        Total Distance: <span id="totalDistance">0.00 km</span>
+      </div>
+      <div class="stat">
+        Max Speed: <span id="maxSpeed">0.00 km/h</span>
+      </div>
+      <div class="stat">
+        Max Power: <span id="maxPower">0.00 w</span>
+      </div>
     </div>
-    <div class="stat">
-      Total Distance: <span id="totalDistance">0.00 km</span>
-    </div>
-    <div class="stat">
-      Average power: <span id="averagePower">0.00 w</span>
-    </div>
+
     <button id="connectButton">Connect</button>
   </div>
 
