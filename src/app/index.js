@@ -73,8 +73,6 @@ const connectorSelect = () => {
 };
 
 const sessionLoop = () => {
-  bikeSession.updateSessionStats();
-
   currentSpeedNode.textContent = `${bike
     .currentSpeedInKmPerH()
     .toFixed(2)} km/h`;

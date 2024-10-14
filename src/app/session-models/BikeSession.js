@@ -52,6 +52,8 @@ class BikeSession {
     this.durationInterval = setInterval(() => {
       this.durationInSeconds += 1;
 
+      this.updateSessionStats();
+
       if (typeof callback === "function") {
         callback();
       }
