@@ -4,6 +4,19 @@ class Bike {
   static POWER_RESISTANCE_COEFFICIENT = 1.090112;
   static POWER_CONSTANT = 7.228958;
 
+  static serialize(bike) {
+    return JSON.stringify({
+      wheelRadius: bike.wheelRadius,
+      cadence: bike.cadence,
+      resistance: bike.resistance,
+    });
+  }
+
+  static deserialize(bikeString) {
+    const obj = JSON.parse(bikeString);
+    return new Bike(obj.wheelRadius, obj.cadence, obj.resistance);
+  }
+
   constructor() {
     this.wheelRadius = 0.35; // average, in meters
     this.wheelCircumference = 2 * Math.PI * this.wheelRadius;
