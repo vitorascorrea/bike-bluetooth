@@ -69,12 +69,10 @@ class BikeSession {
 
   cadenceCallback = (cadence) => {
     this.bike.updateCadence(cadence);
-    this.updateSessionStats();
   };
 
   resistanceCallback = (resistance) => {
     this.bike.updateResistance(resistance);
-    this.updateSessionStats();
   };
 
   updateSessionStats = () => {
@@ -110,7 +108,7 @@ class BikeSession {
       this.maxSpeedInKmPerH = currentSpeedInKmPerH;
     }
 
-    const timeElapsedInHours = timeElapsedInSeconds / 3600.0;;
+    const timeElapsedInHours = timeElapsedInSeconds / 3600.0;
 
     this.totalDistanceInKm += currentSpeedInKmPerH * timeElapsedInHours;
     this.totalKCal += currentPowerInWatts * timeElapsedInHours * 3.6;

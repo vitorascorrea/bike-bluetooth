@@ -14,7 +14,11 @@ class Bike {
 
   static deserialize(bikeString) {
     const obj = JSON.parse(bikeString);
-    return new Bike(obj.wheelRadius, obj.cadence, obj.resistance);
+    const bike = new Bike();
+    bike.cadence = obj.cadence;
+    bike.resistance = obj.resistance;
+
+    return bike;
   }
 
   constructor() {
