@@ -103,26 +103,23 @@
     <!-- Grid for displaying stats -->
     <div class="stats-grid">
       <div class="stat">
-        Current Speed: <span id="currentSpeed">0.00 km/h</span>
+        Speed: <span id="currentSpeed">0.00 km/h</span>/<span id="maxSpeed">0.00 km/h</span>
       </div>
       <div class="stat">
-        Average Power: <span id="averagePower">0.00 w</span>
+        Power: <span id="averagePower">0.00 w</span>/<span id="maxPower">0.00 w</span>
       </div>
       <div class="stat">
-        Max Speed: <span id="maxSpeed">0.00 km/h</span>
-      </div>
-      <div class="stat">
-        Max Power: <span id="maxPower">0.00 w</span>
-      </div>
-      <div class="stat stat-full">
         Total Calories: <span id="totalCalories">0.00 kcal</span>
       </div>
-      <div class="stat stat-full">
+      <div class="stat">
         Total Distance: <span id="totalDistance">0.00 km</span>
+      </div>
+      <div class="stat stat-full">
+        Duration: <span id="duration">0:00:00</span>
       </div>
     </div>
 
-    <button id="connectButton">Connect</button>
+    <button id="connectButton">Start Session</button>
   </div>
 
   <script type="module" src="src/index.js"></script>

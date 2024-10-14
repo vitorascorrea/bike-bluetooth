@@ -17,12 +17,21 @@ const totalCaloriesNode = document.getElementById("totalCalories");
 const averagePowerNode = document.getElementById("averagePower");
 const maxSpeedNode = document.getElementById("maxSpeed");
 const maxPowerNode = document.getElementById("maxPower");
+const duration = document.getElementById("duration");
 
 connectButton.addEventListener("click", async function (event) {
   if (deviceConnector?.active()) {
     try {
       await deviceConnector.stopListening();
-      connectButton.textContent = "Connect";
+
+      if (bikeSession.started()) {
+        connectButton.textContent = "Continue Session";
+      } else {
+        connectButton.textContent = "Start Session";
+      }
+
+      bikeSession.stop();
+
       clearInterval(updateInterval);
     } catch (error) {
       console.error(error);
@@ -34,7 +43,9 @@ connectButton.addEventListener("click", async function (event) {
 
   try {
     await deviceConnector.startListening();
-    connectButton.textContent = "Disconnect";
+    bikeSession.start();
+
+    connectButton.textContent = "Stop Session";
     updateInterval = setInterval(sessionLoop, 1000);
   } catch (error) {
     console.error(error);
@@ -79,4 +90,15 @@ const sessionLoop = () => {
   totalCaloriesNode.textContent = `${bikeSession.totalKCal.toFixed(2)} kcal`;
   maxSpeedNode.textContent = `${bikeSession.maxSpeedInKmPerH.toFixed(2)} km/h`;
   maxPowerNode.textContent = `${bikeSession.maxPowerInWatts.toFixed(2)} w`;
+  duration.textContent = formatTime(bikeSession.durationInSeconds);
 };
+
+const formatTime = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+  const formattedSeconds = seconds.toString().padStart(2, "0");
+
+  return `${hours}:${formattedMinutes}:${formattedSeconds}`;
+}
