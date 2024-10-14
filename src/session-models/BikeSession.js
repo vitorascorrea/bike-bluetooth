@@ -48,9 +48,13 @@ class BikeSession {
     this.maxPowerInWatts = 0;
   }
 
-  start = () => {
+  start = (callback) => {
     this.durationInterval = setInterval(() => {
       this.durationInSeconds += 1;
+
+      if (typeof callback === "function") {
+        callback();
+      }
     }, 1000);
   }
 

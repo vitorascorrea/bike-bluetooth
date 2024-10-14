@@ -6,7 +6,6 @@ import EchelonDeviceConnector from "./connectors/EchelonDeviceConnector.js";
 const bike = new Bike();
 const bikeSession = new BikeSession(bike);
 let deviceConnector = null;
-let updateInterval = null;
 
 const connectButton = document.getElementById("connectButton");
 const connectorSelectNode = document.getElementById("connectorSelect");
@@ -31,8 +30,6 @@ connectButton.addEventListener("click", async function (event) {
       }
 
       bikeSession.stop();
-
-      clearInterval(updateInterval);
     } catch (error) {
       console.error(error);
     }
@@ -43,10 +40,8 @@ connectButton.addEventListener("click", async function (event) {
 
   try {
     await deviceConnector.startListening();
-    bikeSession.start();
-
+    bikeSession.start(sessionLoop);
     connectButton.textContent = "Stop Session";
-    updateInterval = setInterval(sessionLoop, 1000);
   } catch (error) {
     console.error(error);
   }
