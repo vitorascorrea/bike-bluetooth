@@ -48,6 +48,10 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
+    .stat-full {
+      grid-column: span 2;
+    }
+
     .stat span {
       font-weight: bold;
       color: #007BFF;
@@ -105,13 +109,16 @@
         Average Power: <span id="averagePower">0.00 w</span>
       </div>
       <div class="stat">
-        Total Distance: <span id="totalDistance">0.00 km</span>
-      </div>
-      <div class="stat">
         Max Speed: <span id="maxSpeed">0.00 km/h</span>
       </div>
       <div class="stat">
         Max Power: <span id="maxPower">0.00 w</span>
+      </div>
+      <div class="stat stat-full">
+        Total Calories: <span id="totalCalories">0.00 kcal</span>
+      </div>
+      <div class="stat stat-full">
+        Total Distance: <span id="totalDistance">0.00 km</span>
       </div>
     </div>
 

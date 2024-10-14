@@ -4,7 +4,9 @@ class BikeSession {
   constructor(bike) {
     this.bike = bike;
     this.lastTimeChecked = null;
+
     this.totalDistanceInKm = 0;
+    this.totalKCal = 0
 
     this.maxCadence = 0;
     this.maxResistance = 0;
@@ -55,8 +57,11 @@ class BikeSession {
       this.maxSpeedInKmPerH = currentSpeedInKmPerH;
     }
 
-    this.totalDistanceInKm +=
-      currentSpeedInKmPerH * (timeElapsedInSeconds / 3600.0);
+    const timeElapsedInHours = timeElapsedInSeconds / 3600.0;;
+
+    this.totalDistanceInKm += currentSpeedInKmPerH * timeElapsedInHours;
+    this.totalKCal += currentPowerInWatts * timeElapsedInHours * 3.6;
+
     this.lastTimeChecked = currentTimeInSeconds;
   };
 }

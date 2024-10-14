@@ -13,6 +13,7 @@ const connectorSelectNode = document.getElementById("connectorSelect");
 
 const currentSpeedNode = document.getElementById("currentSpeed");
 const totalDistanceNode = document.getElementById("totalDistance");
+const totalCaloriesNode = document.getElementById("totalCalories");
 const averagePowerNode = document.getElementById("averagePower");
 const maxSpeedNode = document.getElementById("maxSpeed");
 const maxPowerNode = document.getElementById("maxPower");
@@ -75,6 +76,7 @@ const sessionLoop = () => {
   totalDistanceNode.textContent = `${bikeSession.totalDistanceInKm.toFixed(
     2
   )} km`;
+  totalCaloriesNode.textContent = `${bikeSession.totalKCal.toFixed(2)} kcal`;
   maxSpeedNode.textContent = `${bikeSession.maxSpeedInKmPerH.toFixed(2)} km/h`;
   maxPowerNode.textContent = `${bikeSession.maxPowerInWatts.toFixed(2)} w`;
 };
