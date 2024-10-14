@@ -5,7 +5,7 @@
   "main": "src/app/index.js",
   "type": "module",
   "scripts": {
-    "start": "npx serve",
+    "start": "npx serve src/app",
     "test": "npx jest"
   },
   "keywords": [],
