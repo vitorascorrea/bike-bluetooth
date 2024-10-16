@@ -33,6 +33,7 @@ npm test
 
 Currently there are two implemented connectors: 
 - Echelon Bike Connector, that currently works for the Echelon Connect Sport bike (may work for other models)
+  - Tested on Chrome only, you have to [enable the experimental bluetooth backend flag](chrome://flags/#enable-web-bluetooth-new-permissions-backend).
 - Debug connector, where you can change the cadence and resistance by using the up/down and left/right arrow keys, respectively
 
 
