@@ -8,6 +8,8 @@ Fun project where my goal is to create a functional app that will _help me incre
 - [No build javascript & css](https://world.hey.com/dhh/you-can-t-get-faster-than-no-build-7a44131c)
 - CI through Github Actions
 
+Future plans include storing workout sessions client-side and gamifying the experience.
+
 ## Running the project
 To install the project:
 
