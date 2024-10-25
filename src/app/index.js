@@ -1,7 +1,8 @@
-import Bike from "./session-models/Bike.js";
-import BikeSession from "./session-models/BikeSession.js";
+import Bike from "./session/Bike.js";
+import BikeSession from "./session/BikeSession.js";
 import DebugConnector from "./connectors/DebugConnector.js";
 import EchelonDeviceConnector from "./connectors/EchelonDeviceConnector.js";
+import { formatTime } from "./utils/Utils.js";
 
 const bike = new Bike();
 const bikeSession = new BikeSession(bike);
@@ -85,13 +86,3 @@ const sessionLoop = () => {
   maxPowerNode.textContent = `${bikeSession.maxPowerInWatts.toFixed(2)} w`;
   duration.textContent = formatTime(bikeSession.durationInSeconds);
 };
-
-const formatTime = (seconds) => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-
-  const formattedMinutes = minutes.toString().padStart(2, "0");
-  const formattedSeconds = seconds.toString().padStart(2, "0");
-
-  return `${hours}:${formattedMinutes}:${formattedSeconds}`;
-}

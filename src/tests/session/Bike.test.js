@@ -1,4 +1,4 @@
-import Bike from "../../app/session-models/Bike.js";
+import Bike from "../../app/session/Bike.js";
 
 describe("Bike Class Tests", () => {
   let bike;

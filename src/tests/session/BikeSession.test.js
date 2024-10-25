@@ -1,5 +1,5 @@
-import BikeSession from "../../app/session-models/BikeSession.js";
-import Bike from "../../app/session-models/Bike.js";
+import BikeSession from "../../app/session/BikeSession.js";
+import Bike from "../../app/session/Bike.js";
 
 describe("BikeSession Class Tests", () => {
   let bike, bikeSession;
