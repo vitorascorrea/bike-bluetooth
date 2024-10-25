@@ -26,7 +26,7 @@ class DebugConnector extends BaseConnector {
   };
 
   stopListening = async () => {
-    removeEventListener("keydown", this.arrowKeysListener);
+    document.removeEventListener("keydown", this.#handleKeyPress);
     this.isActive = false;
 
     return Promise.resolve();

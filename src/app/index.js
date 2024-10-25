@@ -7,6 +7,7 @@ import { formatTime } from "./utils/Utils.js";
 const bike = new Bike();
 const bikeSession = new BikeSession(bike);
 let deviceConnector = null;
+let wakeLock = null;
 
 const connectButton = document.getElementById("connectButton");
 const connectorSelectNode = document.getElementById("connectorSelect");
@@ -30,23 +31,46 @@ connectButton.addEventListener("click", async function (event) {
         connectButton.textContent = "Start Session";
       }
 
+      connectButton.classList.remove("stop");
+
       bikeSession.stop();
     } catch (error) {
       console.error(error);
     }
+
+    if (wakeLock) {
+      wakeLock.release();
+      wakeLock = null;
+    }
+
     return;
   }
 
   connectorSelect();
 
   try {
+    if (!wakeLock) {
+      wakeLock = await setWakeLock();
+    }
+
     await deviceConnector.startListening();
     bikeSession.start(sessionLoop);
     connectButton.textContent = "Stop Session";
+    connectButton.classList.add("stop");
   } catch (error) {
     console.error(error);
   }
 });
+
+const setWakeLock = async () => {
+  const wakeLock = await navigator.wakeLock.request('screen');
+
+  wakeLock.addEventListener('release', () => {
+    console.log('Screen Wake Lock released:', wakeLock.released);
+  });
+
+  return wakeLock;
+};
 
 const connectorSelect = () => {
   const selectedConnector = connectorSelectNode.value;
