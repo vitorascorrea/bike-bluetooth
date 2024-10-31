@@ -16,10 +16,10 @@ const durationStat = document.getElementById("durationStat");
 const distanceStat = document.getElementById("distanceStat");
 const caloriesStat = document.getElementById("caloriesStat");
 
-const speedStat = document.getElementById("speedStat");
-const powerStat = document.getElementById("powerStat");
-const cadenceStat = document.getElementById("cadenceStat");
-const resistanceStat = document.getElementById("resistanceStat");
+const speedStat = document.getElementById("speed");
+const powerStat = document.getElementById("power");
+const cadenceStat = document.getElementById("cadence");
+const resistanceStat = document.getElementById("resistance");
 
 connectButton.addEventListener("click", async function (event) {
   if (deviceConnector?.active()) {
@@ -99,19 +99,27 @@ const connectorSelect = () => {
 };
 
 const sessionLoop = () => {
-  speedStat.setAttribute("now", bike.currentSpeedInKmPerH().toFixed(2));
-  speedStat.setAttribute("max", bikeSession.maxSpeedInKmPerH.toFixed(2));
-
-  powerStat.setAttribute("now", bike.currentPowerInWatts().toFixed(2));
-  powerStat.setAttribute("max", bikeSession.maxPowerInWatts.toFixed(2));
-
-  cadenceStat.setAttribute("now", bike.cadence);
-  cadenceStat.setAttribute("max", bikeSession.maxCadence);
-
-  resistanceStat.setAttribute("now", bike.resistance);
-  resistanceStat.setAttribute("max", bikeSession.maxResistance);
+  updateStatAttribute(speedStat);
+  updateStatAttribute(powerStat);
+  updateStatAttribute(resistanceStat);
+  updateStatAttribute(cadenceStat);
 
   durationStat.setAttribute("value", formatTime(bikeSession.durationInSeconds));
   caloriesStat.setAttribute("value", bikeSession.totalKCal.toFixed(2));
   distanceStat.setAttribute("value", bikeSession.totalDistanceInKm.toFixed(2));
+};
+
+const updateStatAttribute = (statElement) => {
+  statElement.setAttribute(
+    "current",
+    bikeSession.getFormattedStatisticForValue(statElement.id, "current")
+  );
+  statElement.setAttribute(
+    "avg",
+    bikeSession.getFormattedStatisticForValue(statElement.id, "avg")
+  );
+  statElement.setAttribute(
+    "max",
+    bikeSession.getFormattedStatisticForValue(statElement.id, "max")
+  );
 };

@@ -40,12 +40,11 @@ class BikeSession {
     this.lastTimeChecked = null;
 
     this.totalDistanceInKm = 0;
-    this.totalKCal = 0
+    this.totalKCal = 0;
 
-    this.maxCadence = 0;
-    this.maxResistance = 0;
-    this.maxSpeedInKmPerH = 0;
-    this.maxPowerInWatts = 0;
+    this.updateCounter = 0;
+
+    this.statistics = {};
   }
 
   start = (callback) => {
@@ -58,16 +57,16 @@ class BikeSession {
         callback();
       }
     }, 1000);
-  }
+  };
 
   started = () => {
     return !!this.durationInterval;
-  }
+  };
 
   stop = () => {
     clearInterval(this.durationInterval);
     this.durationInterval = null;
-  }
+  };
 
   cadenceCallback = (cadence) => {
     this.bike.updateCadence(cadence);
@@ -90,25 +89,15 @@ class BikeSession {
       return;
     }
 
-    if (this.maxCadence < this.bike.cadence) {
-      this.maxCadence = this.bike.cadence;
-    }
-
-    if (this.maxResistance < this.bike.resistance) {
-      this.maxResistance = this.bike.resistance;
-    }
+    this.updateCounter += 1;
 
     const currentPowerInWatts = this.bike.currentPowerInWatts();
-
-    if (this.maxPowerInWatts < currentPowerInWatts) {
-      this.maxPowerInWatts = currentPowerInWatts;
-    }
-
     const currentSpeedInKmPerH = this.bike.currentSpeedInKmPerH();
 
-    if (this.maxSpeedInKmPerH < currentSpeedInKmPerH) {
-      this.maxSpeedInKmPerH = currentSpeedInKmPerH;
-    }
+    this.calculateStatisticsForValue("cadence", this.bike.cadence);
+    this.calculateStatisticsForValue("resistance", this.bike.resistance);
+    this.calculateStatisticsForValue("power", currentPowerInWatts);
+    this.calculateStatisticsForValue("speed", currentSpeedInKmPerH);
 
     const timeElapsedInHours = timeElapsedInSeconds / 3600.0;
 
@@ -116,6 +105,40 @@ class BikeSession {
     this.totalKCal += currentPowerInWatts * timeElapsedInHours * 3.6;
 
     this.lastTimeChecked = currentTimeInSeconds;
+  };
+
+  calculateStatisticsForValue = (key, newValue) => {
+    if (!this.statistics[key]) {
+      this.statistics[key] = {
+        total: 0,
+        max: 0,
+        avg: 0,
+        current: 0,
+      };
+    }
+
+    this.statistics[key]["current"] = newValue;
+    this.statistics[key]["total"] += newValue;
+
+    if (newValue > this.statistics[key]["max"]) {
+      this.statistics[key]["max"] = newValue;
+    }
+
+    this.statistics[key]["avg"] =
+      this.statistics[key]["total"] / this.updateCounter;
+  };
+
+  getFormattedStatisticForValue = (key, statistic, toFixed = 2) => {
+    if (!this.statistics[key]) {
+      this.statistics[key] = {
+        total: 0,
+        max: 0,
+        avg: 0,
+        current: 0,
+      };
+    }
+
+    return this.statistics[key][statistic].toFixed(toFixed);
   };
 }
 
