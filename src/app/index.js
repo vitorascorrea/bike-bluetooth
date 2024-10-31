@@ -12,13 +12,14 @@ let wakeLock = null;
 const connectButton = document.getElementById("connectButton");
 const connectorSelectNode = document.getElementById("connectorSelect");
 
-const currentSpeedNode = document.getElementById("currentSpeed");
-const totalDistanceNode = document.getElementById("totalDistance");
-const totalCaloriesNode = document.getElementById("totalCalories");
-const averagePowerNode = document.getElementById("averagePower");
-const maxSpeedNode = document.getElementById("maxSpeed");
-const maxPowerNode = document.getElementById("maxPower");
-const duration = document.getElementById("duration");
+const durationStat = document.getElementById("durationStat");
+const distanceStat = document.getElementById("distanceStat");
+const caloriesStat = document.getElementById("caloriesStat");
+
+const speedStat = document.getElementById("speedStat");
+const powerStat = document.getElementById("powerStat");
+const cadenceStat = document.getElementById("cadenceStat");
+const resistanceStat = document.getElementById("resistanceStat");
 
 connectButton.addEventListener("click", async function (event) {
   if (deviceConnector?.active()) {
@@ -63,10 +64,10 @@ connectButton.addEventListener("click", async function (event) {
 });
 
 const setWakeLock = async () => {
-  const wakeLock = await navigator.wakeLock.request('screen');
+  const wakeLock = await navigator.wakeLock.request("screen");
 
-  wakeLock.addEventListener('release', () => {
-    console.log('Screen Wake Lock released:', wakeLock.released);
+  wakeLock.addEventListener("release", () => {
+    console.log("Screen Wake Lock released:", wakeLock.released);
   });
 
   return wakeLock;
@@ -98,15 +99,19 @@ const connectorSelect = () => {
 };
 
 const sessionLoop = () => {
-  currentSpeedNode.textContent = `${bike
-    .currentSpeedInKmPerH()
-    .toFixed(2)} km/h`;
-  averagePowerNode.textContent = `${bike.currentPowerInWatts().toFixed(2)} w`;
-  totalDistanceNode.textContent = `${bikeSession.totalDistanceInKm.toFixed(
-    2
-  )} km`;
-  totalCaloriesNode.textContent = `${bikeSession.totalKCal.toFixed(2)} kcal`;
-  maxSpeedNode.textContent = `${bikeSession.maxSpeedInKmPerH.toFixed(2)} km/h`;
-  maxPowerNode.textContent = `${bikeSession.maxPowerInWatts.toFixed(2)} w`;
-  duration.textContent = formatTime(bikeSession.durationInSeconds);
+  speedStat.setAttribute("now", bike.currentSpeedInKmPerH().toFixed(2));
+  speedStat.setAttribute("max", bikeSession.maxSpeedInKmPerH.toFixed(2));
+
+  powerStat.setAttribute("now", bike.currentPowerInWatts().toFixed(2));
+  powerStat.setAttribute("max", bikeSession.maxPowerInWatts.toFixed(2));
+
+  cadenceStat.setAttribute("now", bike.cadence);
+  cadenceStat.setAttribute("max", bikeSession.maxCadence);
+
+  resistanceStat.setAttribute("now", bike.resistance);
+  resistanceStat.setAttribute("max", bikeSession.maxResistance);
+
+  durationStat.setAttribute("value", formatTime(bikeSession.durationInSeconds));
+  caloriesStat.setAttribute("value", bikeSession.totalKCal.toFixed(2));
+  distanceStat.setAttribute("value", bikeSession.totalDistanceInKm.toFixed(2));
 };

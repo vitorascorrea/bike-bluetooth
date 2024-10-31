@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bike Bluetooth</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -20,67 +22,124 @@
 
     .container {
       background-color: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: auto;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 550px;
     }
 
     h1 {
       margin-bottom: 20px;
+      font-size: 1.5em;
       color: #333;
     }
 
-    /* Grid layout for stats */
+    /* Overall layout */
+    .primary-stats,
     .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
       margin-bottom: 20px;
     }
 
-    .stat {
-      font-size: 1.5em;
-      color: #444;
-      background-color: #f9f9f9;
-      padding: 10px;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-full {
-      grid-column: span 2;
-    }
-
-    .stat span {
-      font-weight: bold;
-      color: #007BFF;
-    }
-
+    /* Dropdown styling and spacing */
     select {
       padding: 10px;
       font-size: 1em;
       border-radius: 5px;
       border: 1px solid #ccc;
-      outline: none;
-      margin-bottom: 20px;
       width: 100%;
+      margin-bottom: 25px;
+      box-sizing: border-box;
     }
 
     select:focus {
       border-color: #007BFF;
     }
 
+    /* Main stats section */
+    .primary-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+    }
+
+    .primary-stat {
+      padding: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #444;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .primary-stat i {
+      font-size: 1.5em;
+      color: #007BFF;
+      margin-bottom: 5px;
+    }
+
+    /* Other stats grid layout */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .stat {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 1em;
+      color: #444;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .stat-header {
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .stat-header i {
+      color: #007BFF;
+      margin-bottom: 5px;
+    }
+
+    /* Stat values layout */
+    .stat-values {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+    .stat-value {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-value span {
+      font-weight: bold;
+      color: #007BFF;
+    }
+
     button {
-      padding: 10px 20px;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
       background-color: #007BFF;
       color: white;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1em;
-      margin-top: 20px;
       width: 100%;
+      cursor: pointer;
+      margin-top: 20px;
     }
 
     .stop {
@@ -98,34 +157,34 @@
   <div class="container">
     <h1>Biking Session</h1>
 
-    <!-- Dropdown to choose between connectors -->
+    <!-- Dropdown for connectors -->
     <select id="connectorSelect">
       <option value="echelon">Echelon Bike Connector</option>
       <option value="debug">Debug Connector</option>
     </select>
 
-    <!-- Grid for displaying stats -->
+    <!-- Key stats section -->
+    <div class="primary-stats">
+      <primary-stat id="durationStat" title="Duration" value="0:00:00" icon="fa-clock"></primary-stat>
+      <primary-stat id="caloriesStat" title="Calories" value="0" unit="kcal" icon="fa-fire"></primary-stat>
+      <primary-stat id="distanceStat" title="Distance" value="0" unit="km" icon="fa-road"></primary-stat>
+    </div>
+
+    <!-- Other stats grid -->
     <div class="stats-grid">
-      <div class="stat">
-        Speed: <span id="currentSpeed">0.00 km/h</span>/<span id="maxSpeed">0.00 km/h</span>
-      </div>
-      <div class="stat">
-        Power: <span id="averagePower">0.00 w</span>/<span id="maxPower">0.00 w</span>
-      </div>
-      <div class="stat">
-        Total Calories: <span id="totalCalories">0.00 kcal</span>
-      </div>
-      <div class="stat">
-        Total Distance: <span id="totalDistance">0.00 km</span>
-      </div>
-      <div class="stat stat-full">
-        Duration: <span id="duration">0:00:00</span>
-      </div>
+      <!-- Speed -->
+      <secondary-stat id="speedStat" title="Speed" icon="fa-tachometer-alt" unit="km/h" now="0.00" avg="0.00"></secondary-stat>
+      <secondary-stat id="powerStat" title="Power" icon="fa-bolt" unit="w" avg="0.00" max="0.00"></secondary-stat>
+      <secondary-stat id="cadenceStat" title="Cadence" icon="fa-sync-alt" unit="rpm" now="0" avg="0" max="0"></secondary-stat>
+      <secondary-stat id="resistanceStat" title="Resistance" icon="fa-weight-hanging" unit="" now="0" max="0"></secondary-stat>
     </div>
 
     <button id="connectButton">Start Session</button>
   </div>
 
+  <script type="module" src="./ui/PrimaryStat.js"></script>
+  <script type="module" src="./ui/SecondaryStat.js"></script>
+  <script type="module" src="./ui/StatValue.js"></script>
   <script type="module" src="./index.js"></script>
 </body>
 
