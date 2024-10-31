@@ -9,10 +9,7 @@ class BikeSession {
       durationInSeconds: bikeSession.durationInSeconds,
       totalDistanceInKm: bikeSession.totalDistanceInKm,
       totalKCal: bikeSession.totalKCal,
-      maxCadence: bikeSession.maxCadence,
-      maxResistance: bikeSession.maxResistance,
-      maxSpeedInKmPerH: bikeSession.maxSpeedInKmPerH,
-      maxPowerInWatts: bikeSession.maxPowerInWatts,
+      statistics: bikeSession.statistics,
     });
   };
 
@@ -25,10 +22,7 @@ class BikeSession {
     newSession.durationInSeconds = obj.durationInSeconds;
     newSession.totalDistanceInKm = obj.totalDistanceInKm;
     newSession.totalKCal = obj.totalKCal;
-    newSession.maxCadence = obj.maxCadence;
-    newSession.maxResistance = obj.maxResistance;
-    newSession.maxSpeedInKmPerH = obj.maxSpeedInKmPerH;
-    newSession.maxPowerInWatts = obj.maxPowerInWatts;
+    newSession.statistics = obj.statistics;
 
     return newSession;
   };
@@ -125,10 +119,10 @@ class BikeSession {
     }
 
     this.statistics[key]["avg"] =
-      this.statistics[key]["total"] / this.updateCounter;
+      this.statistics[key]["total"] / (this.updateCounter || 1);
   };
 
-  getFormattedStatisticForValue = (key, statistic, toFixed = 2) => {
+  getStatisticForValue = (key, statistic) => {
     if (!this.statistics[key]) {
       this.statistics[key] = {
         total: 0,
@@ -138,7 +132,11 @@ class BikeSession {
       };
     }
 
-    return this.statistics[key][statistic].toFixed(toFixed);
+    return this.statistics[key][statistic];
+  };
+
+  getFormattedStatisticForValue = (key, statistic, toFixed = 2) => {
+    return this.getStatisticForValue(key, statistic).toFixed(toFixed);
   };
 }
 

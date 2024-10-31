@@ -24,10 +24,10 @@ describe("BikeSession Class Tests", () => {
     expect(bikeSession.durationInSeconds).toBe(0);
     expect(bikeSession.totalDistanceInKm).toBe(0);
     expect(bikeSession.totalKCal).toBe(0);
-    expect(bikeSession.maxCadence).toBe(0);
-    expect(bikeSession.maxResistance).toBe(0);
-    expect(bikeSession.maxSpeedInKmPerH).toBe(0);
-    expect(bikeSession.maxPowerInWatts).toBe(0);
+    expect(bikeSession.getStatisticForValue("cadence", "max")).toBe(0);
+    expect(bikeSession.getStatisticForValue("resistance", "max")).toBe(0);
+    expect(bikeSession.getStatisticForValue("speed", "max")).toBe(0);
+    expect(bikeSession.getStatisticForValue("power", "max")).toBe(0);
     expect(bikeSession.durationInterval).toBeNull();
     expect(bikeSession.lastTimeChecked).toBeNull();
   });
@@ -73,39 +73,46 @@ describe("BikeSession Class Tests", () => {
 
     const expectedSpeedInKmPerH = (60 * 3 * 60.0) / 1000.0;
 
-    expect(bikeSession.maxCadence).toBe(60);
-    expect(bikeSession.maxResistance).toBe(1);
-    expect(bikeSession.maxPowerInWatts).toBeGreaterThan(0);
+    expect(bikeSession.getStatisticForValue("cadence", "max")).toBe(60);
+    expect(bikeSession.getStatisticForValue("resistance", "max")).toBe(1);
+    expect(bikeSession.getStatisticForValue("power", "max")).toBeGreaterThan(0);
 
-    expect(bikeSession.maxSpeedInKmPerH).toBeCloseTo(expectedSpeedInKmPerH, 2);
+    expect(bikeSession.getStatisticForValue("speed", "max")).toBeCloseTo(
+      expectedSpeedInKmPerH,
+      2
+    );
     expect(bikeSession.totalDistanceInKm).toBeCloseTo(expectedSpeedInKmPerH, 2);
 
     expect(bikeSession.totalKCal).toBeGreaterThan(0);
   });
 
-  test("updateSessionStats doesn't updates stats if lastTimeChecked is null or not before UPDATE_THRESHOLD_IN_SECONDS", () => {
+  test("updateSessionStats doesn't update stats if lastTimeChecked is null or not before UPDATE_THRESHOLD_IN_SECONDS", () => {
     bikeSession.cadenceCallback(90);
     bikeSession.resistanceCallback(5);
 
     bikeSession.updateSessionStats();
 
-    expect(bikeSession.maxCadence).toBe(0);
-    expect(bikeSession.maxResistance).toBe(0);
-    expect(bikeSession.maxSpeedInKmPerH).toBe(0);
-    expect(bikeSession.maxPowerInWatts).toBe(0);
+    expect(bikeSession.getStatisticForValue("cadence", "max")).toBe(0);
+    expect(bikeSession.getStatisticForValue("resistance", "max")).toBe(0);
+    expect(bikeSession.getStatisticForValue("speed", "max")).toBe(0);
+    expect(bikeSession.getStatisticForValue("power", "max")).toBe(0);
 
     expect(bikeSession.totalDistanceInKm).toBe(0);
     expect(bikeSession.totalKCal).toBe(0);
   });
 
   test("serialize correctly serializes the session", () => {
+    const expectedStatistics = {
+      cadence: { max: 100 },
+      resistance: { max: 4 },
+      speed: { max: 35 },
+      power: { max: 300 },
+    };
+
     bikeSession.durationInSeconds = 60;
     bikeSession.totalDistanceInKm = 2.5;
     bikeSession.totalKCal = 100;
-    bikeSession.maxCadence = 85;
-    bikeSession.maxResistance = 3;
-    bikeSession.maxSpeedInKmPerH = 30;
-    bikeSession.maxPowerInWatts = 250;
+    bikeSession.statistics = expectedStatistics;
 
     const serialized = BikeSession.serialize(bikeSession);
     const expected = JSON.stringify({
@@ -113,10 +120,7 @@ describe("BikeSession Class Tests", () => {
       durationInSeconds: bikeSession.durationInSeconds,
       totalDistanceInKm: bikeSession.totalDistanceInKm,
       totalKCal: bikeSession.totalKCal,
-      maxCadence: bikeSession.maxCadence,
-      maxResistance: bikeSession.maxResistance,
-      maxSpeedInKmPerH: bikeSession.maxSpeedInKmPerH,
-      maxPowerInWatts: bikeSession.maxPowerInWatts,
+      statistics: expectedStatistics,
     });
 
     expect(serialized).toBe(expected);
@@ -133,10 +137,12 @@ describe("BikeSession Class Tests", () => {
       durationInSeconds: 120,
       totalDistanceInKm: 10,
       totalKCal: 200,
-      maxCadence: 100,
-      maxResistance: 4,
-      maxSpeedInKmPerH: 35,
-      maxPowerInWatts: 300,
+      statistics: {
+        cadence: { max: 100 },
+        resistance: { max: 4 },
+        speed: { max: 35 },
+        power: { max: 300 },
+      },
     });
 
     const deserializedSession = BikeSession.deserialize(bikeSessionData);
@@ -144,10 +150,14 @@ describe("BikeSession Class Tests", () => {
     expect(deserializedSession.durationInSeconds).toBe(120);
     expect(deserializedSession.totalDistanceInKm).toBe(10);
     expect(deserializedSession.totalKCal).toBe(200);
-    expect(deserializedSession.maxCadence).toBe(100);
-    expect(deserializedSession.maxResistance).toBe(4);
-    expect(deserializedSession.maxSpeedInKmPerH).toBe(35);
-    expect(deserializedSession.maxPowerInWatts).toBe(300);
+    expect(deserializedSession.getStatisticForValue("cadence", "max")).toBe(
+      100
+    );
+    expect(deserializedSession.getStatisticForValue("resistance", "max")).toBe(
+      4
+    );
+    expect(deserializedSession.getStatisticForValue("speed", "max")).toBe(35);
+    expect(deserializedSession.getStatisticForValue("power", "max")).toBe(300);
     expect(deserializedSession.bike.cadence).toBe(90);
     expect(deserializedSession.bike.resistance).toBe(3);
   });
@@ -171,15 +181,17 @@ describe("BikeSession Class Tests", () => {
       originalSession.totalDistanceInKm
     );
     expect(deserializedSession.totalKCal).toBe(originalSession.totalKCal);
-    expect(deserializedSession.maxCadence).toBe(originalSession.maxCadence);
-    expect(deserializedSession.maxResistance).toBe(
-      originalSession.maxResistance
+    expect(deserializedSession.getStatisticForValue("cadence", "max")).toBe(
+      originalSession.getStatisticForValue("cadence", "max")
     );
-    expect(deserializedSession.maxSpeedInKmPerH).toBe(
-      originalSession.maxSpeedInKmPerH
+    expect(deserializedSession.getStatisticForValue("resistance", "max")).toBe(
+      originalSession.getStatisticForValue("resistance", "max")
     );
-    expect(deserializedSession.maxPowerInWatts).toBe(
-      originalSession.maxPowerInWatts
+    expect(deserializedSession.getStatisticForValue("speed", "max")).toBe(
+      originalSession.getStatisticForValue("speed", "max")
+    );
+    expect(deserializedSession.getStatisticForValue("power", "max")).toBe(
+      originalSession.getStatisticForValue("power", "max")
     );
   });
 });
